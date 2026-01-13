@@ -9,7 +9,7 @@ export const metadata = {
   description:
     "Roomly helps you find rooms and shared apartments for rent in Berlin easily and quickly.",
   verification: {
-    google: "google-site-verification: googlef4ce912d6e84da26.html",
+    google: "googlef4ce912d6e84da26",
   },
 };
 
