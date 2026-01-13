@@ -1,6 +1,18 @@
 import "./globals.css";
 import Link from "next/link";
 
+/* ===============================
+   SEO + Google Search Console
+================================ */
+export const metadata = {
+  title: "Roomly – Find Rooms in Berlin",
+  description:
+    "Roomly helps you find rooms and shared apartments for rent in Berlin easily and quickly.",
+  verification: {
+    google: "google-site-verification: googlef4ce912d6e84da26.html",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -10,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900">
 
-        {/* Header */}
+        {/* ================= Header ================= */}
         <header className="bg-white shadow-md border-b">
           <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
             <Link href="/" className="text-2xl font-bold text-green-600">
@@ -27,19 +39,22 @@ export default function RootLayout({
               <Link href="/contact" className="text-gray-700 hover:text-green-600">
                 Contact
               </Link>
-              <Link href="/privacy-policy" className="text-gray-700 hover:text-green-600">
+              <Link
+                href="/privacy-policy"
+                className="text-gray-700 hover:text-green-600"
+              >
                 Privacy
               </Link>
             </nav>
           </div>
         </header>
 
-        {/* Content */}
+        {/* ================= Main Content ================= */}
         <main className="max-w-7xl mx-auto px-6 py-10">
           {children}
         </main>
 
-        {/* Footer */}
+        {/* ================= Footer ================= */}
         <footer className="bg-gray-900 text-gray-300 mt-16">
           <div className="max-w-7xl mx-auto px-6 py-6 text-sm text-center">
             © {new Date().getFullYear()} Roomly – Find rooms in Berlin
