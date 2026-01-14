@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://roomly-nine.com";
+  const baseUrl = "https://roomly-nine.vercel.app";
 
   return [
     {
