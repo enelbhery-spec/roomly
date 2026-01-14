@@ -1,0 +1,18 @@
+import { MetadataRoute } from "next";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://roomly-nine.com";
+
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/rooms`,
+      lastModified: new Date(),
+      priority: 0.9,
+    },
+  ];
+}
