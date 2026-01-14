@@ -2,6 +2,7 @@ import "./globals.css";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 /* ===============================
    SEO + Google Search Console
@@ -22,13 +23,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+
+      {/* ================= Google Analytics ================= */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-CYEDYKQPRJ"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-CYEDYKQPRJ');
+        `}
+      </Script>
+      {/* ==================================================== */}
+
       <body className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900">
 
         {/* ================= Header ================= */}
         <header className="bg-white shadow-md border-b">
           <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
 
-            {/* Logo (آمن بدون كسر) */}
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/logo.png"

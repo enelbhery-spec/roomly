@@ -1,51 +1,53 @@
 import { notFound } from "next/navigation";
-import { listings } from "@/data/listings";
+import { createClient } from "@/lib/supabase/server";
 
-export default async function ListingDetails({
+export default async function RoomPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const listing = listings[id as keyof typeof listings];
+  const supabase = createClient();
 
-  if (!listing) return notFound();
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (!room || error) {
+    return notFound();
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
 
-        {/* Title */}
         <h1 className="text-3xl font-bold mb-4">
-          {listing.title}
+          {room.title}
         </h1>
 
-        {/* Price */}
-        <p className="text-green-600 text-xl font-semibold mb-6">
-          {listing.price}
+        <p className="text-green-600 text-xl font-semibold mb-4">
+          €{room.price} / month
         </p>
 
-        {/* Main Description */}
         <p className="text-gray-700 mb-6 leading-relaxed">
-          {listing.description}
+          {room.description}
         </p>
 
-        {/* Extra Content for SEO & AdSense */}
-        <section className="space-y-4 text-gray-700">
+        {/* محتوى إضافي للثقة و SEO */}
+        <section className="space-y-3 text-gray-600 text-sm">
           <p>
-            This accommodation is located in one of Berlin’s most popular
-            neighborhoods, offering easy access to public transportation,
-            supermarkets, cafes, and essential services.
+            Located in {room.location}, with easy access to public transport,
+            shops, and daily services.
           </p>
 
           <p>
-            The room is suitable for students, professionals, and newcomers
-            who are looking for affordable and comfortable housing in Berlin.
+            Ideal for students, professionals, and newcomers to Berlin.
           </p>
 
           <p>
-            Renting a room in Berlin can be challenging, so early booking
-            and choosing well-connected areas can save both time and money.
+            Early booking is recommended due to high demand.
           </p>
         </section>
 

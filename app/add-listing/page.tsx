@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
+
 export default function AddListingPage() {
+  const [images, setImages] = useState<FileList | null>(null);
+
   return (
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-
         <h1 className="text-3xl font-bold mb-2 text-gray-900">
           Add your listing
         </h1>
@@ -14,15 +17,14 @@ export default function AddListingPage() {
         </p>
 
         <form className="space-y-5">
-
           {/* Listing type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Listing type
             </label>
             <select className="w-full border rounded p-2">
-              <option>Room</option>
-              <option>Shared Apartment</option>
+              <option value="room">Room</option>
+              <option value="shared">Shared Apartment</option>
             </select>
           </div>
 
@@ -74,19 +76,38 @@ export default function AddListingPage() {
             />
           </div>
 
+          {/* Images */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Photos
+            </label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => setImages(e.target.files)}
+              className="w-full border rounded p-2 bg-white"
+            />
+
+            {images && (
+              <p className="text-sm text-gray-500 mt-1">
+                {images.length} image(s) selected
+              </p>
+            )}
+          </div>
+
           {/* Submit */}
           <button
-            type="button"
+            type="submit"
             className="w-full bg-green-600 text-white py-3 rounded font-semibold hover:bg-green-700 transition"
           >
             Submit listing
           </button>
 
-          {/* Info message */}
+          {/* Info */}
           <p className="text-sm text-gray-500 text-center">
             Listings are reviewed before publication.
           </p>
-
         </form>
       </div>
     </main>

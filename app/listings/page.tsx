@@ -1,26 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
-const listings = [
-  {
-    id: "1",
-    title: "Room in Neukölln",
-    price: 450,
-    type: "room",
-  },
-  {
-    id: "2",
-    title: "Shared apartment in Kreuzberg",
-    price: 600,
-    type: "shared",
-  },
-];
+type Listing = {
+  id: string;
+  title: string;
+  price: number;
+  type: "room" | "shared";
+};
 
 export default function ListingsPage() {
+  const supabase = createClient();
+
+  const [listings, setListings] = useState<Listing[]>([]);
   const [type, setType] = useState("all");
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      const { data, error } = await supabase
+        .from("rooms")
+        .select("id, title, price, type")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setListings(data);
+      }
+
+      setLoading(false);
+    };
+
+    fetchListings();
+  }, []);
 
   const filteredListings = listings.filter((item) => {
     const matchType = type === "all" || item.type === type;
@@ -61,17 +75,17 @@ export default function ListingsPage() {
         </div>
 
         {/* Results */}
-        <div className="space-y-4">
-          {filteredListings.length === 0 && (
-            <p className="text-gray-500">
-              No results found.
-            </p>
-          )}
+        {loading && <p className="text-gray-500">Loading...</p>}
 
+        {!loading && filteredListings.length === 0 && (
+          <p className="text-gray-500">No results found.</p>
+        )}
+
+        <div className="space-y-4">
           {filteredListings.map((item) => (
             <Link
               key={item.id}
-              href={`/listings/${item.id}`}
+              href={`/rooms/${item.id}`}
               className="block bg-white p-4 rounded shadow hover:shadow-md"
             >
               <h2 className="font-semibold text-lg">{item.title}</h2>
