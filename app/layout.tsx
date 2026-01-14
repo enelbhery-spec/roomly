@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 /* ===============================
@@ -26,8 +27,19 @@ export default function RootLayout({
         {/* ================= Header ================= */}
         <header className="bg-white shadow-md border-b">
           <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <Link href="/" className="text-2xl font-bold text-green-600">
-              Roomly
+
+            {/* Logo (آمن بدون كسر) */}
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/logo.png"
+                alt="Roomly Logo"
+                width={36}
+                height={36}
+                priority
+              />
+              <span className="text-2xl font-bold text-green-600">
+                Roomly
+              </span>
             </Link>
 
             <nav className="space-x-6 text-sm font-medium">
@@ -47,6 +59,7 @@ export default function RootLayout({
                 Privacy
               </Link>
             </nav>
+
           </div>
         </header>
 
