@@ -73,16 +73,16 @@ export default function ListingsPage() {
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
           >
-            <option value={500}>Max €500</option>
+            <option value={600}>Max €600</option>
             <option value={700}>Max €700</option>
-            <option value={2000}>Max €1000</option>
+            <option value={2000}>Max 2000</option>
           </select>
         </div>
 
         {loading && <p className="text-gray-500">Loading...</p>}
 
         {!loading && filteredListings.length === 0 && (
-          <p className="text-gray-500">No results found.</p>
+          <p className="text-gray-600">No results found.</p>
         )}
 
         <div className="space-y-4">
