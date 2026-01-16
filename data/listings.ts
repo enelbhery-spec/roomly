@@ -1,5 +1,14 @@
-const { data, error } = await supabase
-  .from("rooms")
-  .select("*");
+import { supabase } from "@/lib/supabase";
 
-console.log(data, error);
+export async function getListings() {
+  const { data, error } = await supabase
+    .from("rooms")
+    .select("*");
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
+}
