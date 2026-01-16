@@ -1,65 +1,114 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import Image from "next/image";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-import { useParams, notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+export const dynamic = "force-dynamic";
 
-export default function RoomDetailsPage() {
-  const params = useParams();
-  const id = params.id as string;
+type RoomPageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function RoomDetailsPage({ params }: RoomPageProps) {
+  const { id } = await params;
 
   const supabase = createClient();
-  const [room, setRoom] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchRoom() {
-      const { data, error } = await supabase
-        .from("rooms")
-        .select("*")
-        .eq("id", id)
-        .single();
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select(`
+      id,
+      title,
+      description,
+      price,
+      currency,
+      room_type,
+      phone,
+      facebook_url,
+      images
+    `)
+    .eq("id", id)
+    .single();
 
-      if (error || !data) {
-        setRoom(null);
-      } else {
-        setRoom(data);
-      }
-
-      setLoading(false);
-    }
-
-    fetchRoom();
-  }, [id]);
-
-  if (loading) {
-    return <p className="p-6">Loading...</p>;
-  }
-
-  if (!room) {
-    return notFound();
+  if (error || !room) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500 text-lg">Room not found</p>
+      </main>
+    );
   }
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+      <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+        <Link
+          href="/listings"
+          className="text-green-700 underline mb-4 inline-block"
+        >
+          ← Back to listings
+        </Link>
 
-        <h1 className="text-3xl font-bold mb-4">
-          {room.title}
-        </h1>
+        <h1 className="text-2xl font-bold mb-2">{room.title}</h1>
 
-        <p className="text-green-600 text-xl font-semibold mb-4">
-          €{room.price} / month
+        <p className="text-gray-600 mb-4">
+          {room.currency ?? "EUR"} {room.price} / month
         </p>
 
-        <p className="text-gray-700 mb-6">
-          {room.description}
-        </p>
+        {/* Images */}
+        {room.images && room.images.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            {room.images.map((img: string, index: number) => {
+              const imageUrl = supabase.storage
+                .from("rooms")
+                .getPublicUrl(img).data.publicUrl;
 
-        <p className="text-sm text-gray-500">
-          Location: {room.location}
-        </p>
+              return (
+                <div key={index} className="relative h-48 rounded overflow-hidden">
+                  <Image
+                    src={imageUrl}
+                    alt={room.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
+        {/* Description */}
+        {room.description && (
+          <p className="text-gray-700 mb-6">{room.description}</p>
+        )}
+
+        {/* Type */}
+        {room.room_type && (
+          <p className="mb-4">
+            <strong>Type:</strong>{" "}
+            {room.room_type === "room" ? "Room" : "Shared Apartment"}
+          </p>
+        )}
+
+        {/* Contact Section */}
+        <div className="mt-6 space-y-3">
+          {room.phone && (
+            <p className="text-lg font-semibold text-green-700">
+              📞 {room.phone}
+            </p>
+          )}
+
+          {room.facebook_url && (
+            <a
+              href={room.facebook_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            >
+              💬 Contact via Facebook
+            </a>
+          )}
+        </div>
       </div>
     </main>
   );

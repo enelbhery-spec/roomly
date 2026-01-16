@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const supabase = createClient();
 
   const { data: rooms } = await supabase
     .from("rooms")
     .select("id, title, price")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(6); // نعرض أحدث 6 فقط
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
@@ -15,9 +18,7 @@ export default async function HomePage() {
 
         {/* Header */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Roomly
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Roomly</h1>
           <p className="text-gray-600 mt-2">
             Publish your room or shared apartment for rent in Berlin – for free
           </p>
@@ -39,50 +40,37 @@ export default async function HomePage() {
           </Link>
         </section>
 
-        {/* Filters (شكل فقط – بدون منطق حالياً) */}
-        <section className="flex gap-4 mb-6">
-          <select className="border p-2 rounded w-1/2">
-            <option>Room</option>
-            <option>Shared Apartment</option>
-          </select>
-
-          <select className="border p-2 rounded w-1/2">
-            <option>Max €500</option>
-            <option>Max €700</option>
-            <option>Max €900</option>
-          </select>
-        </section>
-
-        {/* Listings */}
+        {/* Latest Listings */}
         <section className="space-y-4">
           {rooms && rooms.length === 0 && (
-            <p className="text-gray-500">
-              No rooms available right now.
-            </p>
+            <p className="text-gray-500">No rooms available right now.</p>
           )}
 
           {rooms?.map((room) => (
-<Link
-    key={room.id}
-    href={`/rooms/${room.id}`}
-    className="block bg-white p-4 rounded shadow hover:shadow-md transition"
-  >
-    <h2 className="font-semibold text-lg">
-      {room.title}
-    </h2>
-    <p className="text-gray-600">
-      €{room.price} / month
-    </p>
-  </Link>
+            <Link
+              key={room.id}
+              href={`/rooms/${room.id}`}
+              className="block bg-white p-4 rounded shadow hover:shadow-md transition"
+            >
+              <h2 className="font-semibold text-lg">{room.title}</h2>
+              <p className="text-gray-600">€{room.price} / month</p>
+            </Link>
           ))}
         </section>
 
-        {/* How it works link */}
-        <footer className="mt-10 text-center">
+        {/* View more */}
+        <div className="mt-8 text-center">
           <Link
-            href="/how-it-works"
-            className="text-green-700 underline"
+            href="/listings"
+            className="inline-block bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-800 transition"
           >
+            View more rooms
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-10 text-center">
+          <Link href="/how-it-works" className="text-green-700 underline">
             How Roomly works
           </Link>
         </footer>

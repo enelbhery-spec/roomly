@@ -16,9 +16,10 @@ export default function ContactPage() {
         </h1>
 
         <p className="text-gray-600 text-center mb-8">
-         - If you have any questions about our listings or need more information,
+          If you have any questions about our listings or need more information,
           feel free to get in touch with us.
-         - Listings are collected from public sources and landlords can contact us to update or remove listings
+          <br/>
+          Listings are collected from public sources and landlords can contact us to update or remove listings
         </p>
 
         <div className="space-y-4 text-center text-gray-700">
